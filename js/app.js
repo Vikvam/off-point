@@ -1,6 +1,8 @@
 import { initMap, loadBasemap, addRegion, flyToRegion, showWorldView, hasRegions, getRegions } from './map.js';
-import { storeMapFile, getAllMaps, getLastProject, setLastProject } from './storage.js';
-import { initSidebar, showRegionList, showRegionDetail } from './sidebar.js';
+import { storeMapFile, getAllMaps, getLastProject, setLastProject, saveWaypoints, getWaypoints } from './storage.js';
+import { initSidebar, showRegionList, showRegionDetail, updateWaypointList } from './sidebar.js';
+import { initWaypoints, loadWaypoints, clearWaypoints, getExportData, removeWaypoint } from './waypoints.js';
+import { exportRoute } from './export.js';
 
 let currentFilename = null;
 
@@ -25,18 +27,32 @@ function updateSidebar(view, filename) {
   } else if (view === 'region' && filename) {
     const region = getRegions().find(([f]) => f === filename);
     if (region) {
-      showRegionDetail(filename, region[1].bounds, []);
+      showRegionDetail(filename, region[1].bounds, getExportData());
     }
   }
 }
 
-function onViewChange(view, filename) {
+async function onViewChange(view, filename) {
   updateButtons(view);
-  updateSidebar(view, filename);
-  if (filename) {
+
+  // Save current waypoints before switching
+  if (currentFilename) {
+    await saveWaypoints(currentFilename, getExportData());
+  }
+
+  if (view === 'region' && filename) {
     currentFilename = filename;
     setLastProject(filename);
+    // Load waypoints for this region
+    const data = await getWaypoints(filename);
+    clearWaypoints();
+    loadWaypoints(data || []);
+  } else if (view === 'world') {
+    clearWaypoints();
+    currentFilename = null;
   }
+
+  updateSidebar(view, filename);
 }
 
 async function main() {
@@ -51,6 +67,14 @@ async function main() {
 
   initSidebar({
     onRegionClick: (filename) => flyToRegion(map, filename),
+    onRemoveWaypoint: (index) => removeWaypoint(index),
+  });
+
+  initWaypoints(map, async () => {
+    if (currentFilename) {
+      await saveWaypoints(currentFilename, getExportData());
+      updateSidebar('region', currentFilename);
+    }
   });
 
   // Load all stored regions
@@ -82,6 +106,13 @@ async function main() {
 
   // World view button
   document.getElementById('btn-world').addEventListener('click', () => showWorldView(map));
+
+  // Export button
+  document.getElementById('btn-export').addEventListener('click', () => {
+    if (currentFilename) {
+      exportRoute(currentFilename, getExportData());
+    }
+  });
 }
 
 main();

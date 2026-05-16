@@ -1,7 +1,9 @@
 let onRegionClick = null;
+let onRemoveWaypoint = null;
 
 export function initSidebar(callbacks) {
   onRegionClick = callbacks.onRegionClick;
+  if (callbacks.onRemoveWaypoint) onRemoveWaypoint = callbacks.onRemoveWaypoint;
 
   // Mobile drawer toggle
   const handle = document.getElementById('sidebar-handle');
@@ -61,11 +63,18 @@ export function updateWaypointList(waypoints) {
     const li = document.createElement('li');
     if (wp.stopAfterReach) li.classList.add('stop');
 
-    let html = `<span class="wp-coords">${wp.lat.toFixed(5)}, ${wp.lng.toFixed(5)}</span>`;
+    let html = `<span class="wp-num">${i + 1}</span>`;
+    html += `<span class="wp-coords">${wp.lat.toFixed(5)}, ${wp.lng.toFixed(5)}</span>`;
     if (wp.stopAfterReach) {
       html += '<span class="wp-badge">STOP</span>';
     }
+    html += '<button class="wp-remove" title="Remove">✕</button>';
     li.innerHTML = html;
+
+    li.querySelector('.wp-remove').addEventListener('click', () => {
+      if (onRemoveWaypoint) onRemoveWaypoint(i);
+    });
+
     list.appendChild(li);
   }
 }
