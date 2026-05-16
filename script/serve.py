@@ -45,7 +45,7 @@ def main():
     ip = get_lan_ip()
     os.chdir(ROOT)
 
-    server = http.server.HTTPServer(('0.0.0.0', args.port), http.server.SimpleHTTPRequestHandler)
+    server = http.server.ThreadingHTTPServer(('0.0.0.0', args.port), http.server.SimpleHTTPRequestHandler)
 
     if args.ssl:
         print(f'Generating self-signed certificate for {ip}...')

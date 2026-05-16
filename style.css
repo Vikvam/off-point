@@ -231,6 +231,43 @@ html, body {
 }
 
 
+/* ── Status bar ── */
+
+#status-bar {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: #999;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+#status-bar .status-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#status-bar .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ccc;
+}
+
+#status-bar .dot.ok { background: #4caf50; }
+#status-bar .dot.err { background: #e53935; }
+
+/* ── GPS location ── */
+
+.gps-accuracy {
+  fill: #4285f4;
+  fill-opacity: 0.1;
+  stroke: #4285f4;
+  stroke-opacity: 0.3;
+  stroke-width: 1;
+}
+
 /* ── Waypoint popup ── */
 
 .wp-popup-label {

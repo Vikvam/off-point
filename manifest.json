@@ -1,7 +1,7 @@
 {
   "name": "off-point",
   "short_name": "off-point",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#f8f4f0",
   "theme_color": "#2196F3",

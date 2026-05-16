@@ -6,6 +6,19 @@ import { exportRoute } from './export.js';
 
 let currentFilename = null;
 
+function initStatusBar() {
+  const bar = document.getElementById('status-bar');
+  bar.innerHTML = `
+    <span class="status-item"><span class="dot" id="dot-sw"></span>SW</span>
+    <span class="status-item"><span class="dot" id="dot-gps"></span>GPS</span>
+  `;
+}
+
+function setStatus(id, ok) {
+  const dot = document.getElementById(id);
+  if (dot) dot.className = `dot ${ok ? 'ok' : 'err'}`;
+}
+
 function updateButtons(view) {
   const btnWorld = document.getElementById('btn-world');
 
@@ -58,12 +71,44 @@ async function onViewChange(view, filename) {
 }
 
 async function main() {
+  initStatusBar();
+
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
+    navigator.serviceWorker.register('./sw.js')
+      .then(() => setStatus('dot-sw', true))
+      .catch(() => setStatus('dot-sw', false));
+  } else {
+    setStatus('dot-sw', false);
   }
 
   const map = initMap();
   await loadBasemap(map);
+
+  // GPS location tracking
+  let gpsMarker = null;
+  let gpsCircle = null;
+  map.on('locationfound', (e) => {
+    setStatus('dot-gps', true);
+    const { latlng, accuracy } = e;
+    if (gpsMarker) {
+      gpsMarker.setLatLng(latlng);
+      gpsCircle.setLatLng(latlng).setRadius(accuracy);
+    } else {
+      gpsCircle = L.circle(latlng, { radius: accuracy, className: 'gps-accuracy' }).addTo(map);
+      gpsMarker = L.circleMarker(latlng, {
+        radius: 7,
+        fillColor: '#4285f4',
+        fillOpacity: 1,
+        color: '#fff',
+        weight: 2,
+      }).addTo(map);
+    }
+  });
+  map.on('locationerror', (e) => {
+    setStatus('dot-gps', false);
+    console.warn('Location error:', e.message);
+  });
+  map.locate({ watch: true, enableHighAccuracy: true });
 
   const callbacks = { onViewChange };
 
