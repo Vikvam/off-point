@@ -1,7 +1,7 @@
-import { initMap, loadBasemap, addRegion, flyToRegion, showWorldView, hasRegions, getRegions } from './map.js';
-import { storeMapFile, getAllMaps, getLastProject, setLastProject, saveWaypoints, getWaypoints } from './storage.js';
+import { initMap, loadBasemap, addRegion, flyToRegion, showWorldView, hasRegions, getRegions, removeRegion } from './map.js';
+import { storeMapFile, getAllMaps, getLastProject, setLastProject, saveWaypoints, getWaypoints, removeMap } from './storage.js';
 import { initSidebar, showRegionList, showRegionDetail, updateWaypointList } from './sidebar.js';
-import { initWaypoints, loadWaypoints, clearWaypoints, getExportData, removeWaypoint } from './waypoints.js';
+import { initWaypoints, loadWaypoints, clearWaypoints, getExportData, removeWaypoint, setEnabled } from './waypoints.js';
 import { exportRoute } from './export.js';
 
 let currentFilename = null;
@@ -47,7 +47,9 @@ async function onViewChange(view, filename) {
     const data = await getWaypoints(filename);
     clearWaypoints();
     loadWaypoints(data || []);
+    setEnabled(true);
   } else if (view === 'world') {
+    setEnabled(false);
     clearWaypoints();
     currentFilename = null;
   }
@@ -68,6 +70,12 @@ async function main() {
   initSidebar({
     onRegionClick: (filename) => flyToRegion(map, filename),
     onRemoveWaypoint: (index) => removeWaypoint(index),
+    onDeleteMap: async (filename) => {
+      removeRegion(map, filename);
+      await removeMap(filename);
+      updateSidebar('world', null);
+      updateButtons('world');
+    },
   });
 
   initWaypoints(map, async () => {
@@ -98,7 +106,6 @@ async function main() {
   fileInput.addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     await storeMapFile(file);
     await addRegion(map, file, file.name, callbacks);
     flyToRegion(map, file.name);

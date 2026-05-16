@@ -125,3 +125,11 @@ export function getActiveRegion() {
 export function getRegions() {
   return [...regions.entries()];
 }
+
+export function removeRegion(map, filename) {
+  const region = regions.get(filename);
+  if (!region) return;
+  if (map.hasLayer(region.layer)) map.removeLayer(region.layer);
+  if (map.hasLayer(region.rect)) map.removeLayer(region.rect);
+  regions.delete(filename);
+}

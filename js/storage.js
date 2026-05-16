@@ -54,3 +54,4 @@ export async function saveWaypoints(filename, waypoints) {
 export async function getWaypoints(filename) {
   return await get(`data_${filename}`) || null;
 }
+

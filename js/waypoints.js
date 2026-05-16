@@ -4,12 +4,14 @@ let map = null;
 let onChange = null;
 let waypoints = []; // { lat, lng, stopAfterReach, marker }
 let polyline = null;
+let enabled = false;
 
 export function initWaypoints(leafletMap, onChangeCallback) {
   map = leafletMap;
   onChange = onChangeCallback;
 
   map.on('click', (e) => {
+    if (!enabled) return;
     addWaypoint(e.latlng);
   });
 }
@@ -138,6 +140,10 @@ export function removeWaypoint(index) {
 
 export function getWaypointCount() {
   return waypoints.length;
+}
+
+export function setEnabled(val) {
+  enabled = val;
 }
 
 function updatePolyline() {

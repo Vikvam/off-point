@@ -1,9 +1,11 @@
 let onRegionClick = null;
 let onRemoveWaypoint = null;
+let onDeleteMap = null;
 
 export function initSidebar(callbacks) {
   onRegionClick = callbacks.onRegionClick;
   if (callbacks.onRemoveWaypoint) onRemoveWaypoint = callbacks.onRemoveWaypoint;
+  if (callbacks.onDeleteMap) onDeleteMap = callbacks.onDeleteMap;
 
   // Mobile drawer toggle
   const handle = document.getElementById('sidebar-handle');
@@ -26,11 +28,18 @@ export function showRegionList(regions) {
     const boundsStr = `${bounds.getSouth().toFixed(2)}, ${bounds.getWest().toFixed(2)} — ${bounds.getNorth().toFixed(2)}, ${bounds.getEast().toFixed(2)}`;
 
     li.innerHTML = `
-      <div class="region-name">${name}</div>
-      <div class="region-bounds">${boundsStr}</div>
+      <div class="region-info">
+        <div class="region-name">${name}</div>
+        <div class="region-bounds">${boundsStr}</div>
+      </div>
+      <button class="region-remove" title="Delete map">✕</button>
     `;
-    li.addEventListener('click', () => {
+    li.querySelector('.region-info').addEventListener('click', () => {
       if (onRegionClick) onRegionClick(filename);
+    });
+    li.querySelector('.region-remove').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (onDeleteMap) onDeleteMap(filename);
     });
     list.appendChild(li);
   }

@@ -50,7 +50,7 @@ html, body {
 #toolbar {
   position: fixed;
   top: 12px;
-  left: 12px;
+  right: 332px;
   z-index: 1000;
   display: flex;
   gap: 8px;
@@ -103,16 +103,23 @@ html, body {
 }
 
 #region-list li {
+  display: flex;
+  align-items: center;
   padding: 10px 12px;
   margin-bottom: 6px;
   background: #f5f5f5;
   border-radius: 6px;
-  cursor: pointer;
   transition: background 0.15s;
 }
 
 #region-list li:hover {
   background: #e8e8e8;
+}
+
+#region-list li .region-info {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
 }
 
 #region-list li .region-name {
@@ -123,6 +130,22 @@ html, body {
   font-size: 12px;
   color: #888;
   margin-top: 2px;
+}
+
+#region-list li .region-remove {
+  margin-left: auto;
+  border: none;
+  background: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 4px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+#region-list li .region-remove:hover {
+  color: #e53935;
 }
 
 #waypoint-list {
@@ -207,6 +230,7 @@ html, body {
   background: #1976D2;
 }
 
+
 /* ── Waypoint popup ── */
 
 .wp-popup-label {
@@ -267,8 +291,8 @@ html, body {
   }
 
   #toolbar {
-    top: auto;
-    bottom: 56px;
-    left: 12px;
+    top: 12px;
+    right: 12px;
+    left: auto;
   }
 }
