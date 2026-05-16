@@ -1,0 +1,16 @@
+{
+  "name": "off-point",
+  "version": "1.0.0",
+  "repository": "git@github.com:Vikvam/off-point.git",
+  "author": "Vikvam <vikvam@disroot.org>",
+  "license": "MIT",
+  "dependencies": {
+    "idb-keyval": "^6.2.2",
+    "leaflet": "^1.9.4",
+    "pmtiles": "^4.4.1",
+    "protomaps-leaflet": "^5.1.0"
+  },
+  "scripts": {
+    "postinstall": "mkdir -p lib && cp node_modules/leaflet/dist/leaflet.js lib/ && cp node_modules/leaflet/dist/leaflet.css lib/ && cp -r node_modules/leaflet/dist/images lib/ && cp node_modules/pmtiles/dist/pmtiles.js lib/ && cp node_modules/protomaps-leaflet/dist/protomaps-leaflet.js lib/ && cp node_modules/idb-keyval/dist/index.js lib/idb-keyval.js"
+  }
+}
