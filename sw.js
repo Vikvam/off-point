@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v0';
 const CACHE_NAME = `off-point-${CACHE_VERSION}`;
 
 const PRECACHE_URLS = [
