@@ -165,6 +165,18 @@ async function main() {
       exportRoute(currentFilename, getExportData());
     }
   });
+
+  // Help button
+  const helpOverlay = document.getElementById('help-overlay');
+  document.getElementById('btn-help').addEventListener('click', () => {
+    helpOverlay.hidden = false;
+  });
+  document.getElementById('help-close').addEventListener('click', () => {
+    helpOverlay.hidden = true;
+  });
+  helpOverlay.addEventListener('click', (e) => {
+    if (e.target === helpOverlay) helpOverlay.hidden = true;
+  });
 }
 
 main();

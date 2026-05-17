@@ -41,6 +41,7 @@ jobs:
           cp index.html style.css manifest.json sw.js _site/
           cp -r js icons _site/
           cp -r data _site/ 2>/dev/null || true
+          sed -i 's|__REPO_URL__|https://github.com/${{ github.repository }}|g' _site/index.html
 
       - uses: actions/upload-pages-artifact@v3
         with:

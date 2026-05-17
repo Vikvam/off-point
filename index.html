@@ -23,6 +23,8 @@
         <section id="panel-regions">
           <h2>Regions</h2>
           <ul id="region-list"></ul>
+          <button id="btn-load" type="button" class="sidebar-btn">Load Map</button>
+          <input type="file" id="file-input" accept=".pmtiles" hidden>
         </section>
 
         <!-- Region view: metadata + waypoints -->
@@ -39,9 +41,43 @@
   </div>
 
   <div id="toolbar">
-    <button id="btn-load" type="button">Load Map</button>
     <button id="btn-world" type="button" hidden>World View</button>
-    <input type="file" id="file-input" accept=".pmtiles" hidden>
+    <button id="btn-help" type="button">?</button>
+  </div>
+
+  <div id="help-overlay" hidden>
+    <div id="help-dialog">
+      <h2>off-point</h2>
+
+      <div class="help-section">
+        <h3>Get map files</h3>
+        <p>You need <code>.pmtiles</code> map files for your area. Download them from:</p>
+        <div class="help-links">
+          <a href="https://app.protomaps.com/" target="_blank" rel="noopener">Protomaps</a>
+          <a href="https://extract.bbbike.org/" target="_blank" rel="noopener">BBBike Extract</a>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <h3>Install as app</h3>
+        <p>Use your browser's <strong>"Install"</strong> or <strong>"Add to Home Screen"</strong> option. The app then works fully offline.</p>
+      </div>
+
+      <div class="help-section help-tips">
+        <h3>Tips</h3>
+        <ul>
+          <li>Load a region <code>.pmtiles</code> map file</li>
+          <li>Select a region</li>
+          <li>Tap the map to place waypoints</li>
+          <li>Drag markers to reposition</li>
+          <li>Tap a marker to toggle stop behavior</li>
+          <li>Use the sidebar to delete waypoints or export</li>
+        </ul>
+      </div>
+
+      <a class="help-repo" href="__REPO_URL__" target="_blank" rel="noopener">View on GitHub</a>
+      <button id="help-close" type="button">Got it</button>
+    </div>
   </div>
 
   <script src="lib/leaflet.js"></script>
